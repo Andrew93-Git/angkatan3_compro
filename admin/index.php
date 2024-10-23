@@ -1,3 +1,6 @@
+<?php session_start();
+
+?>
 <!DOCTYPE html>
 
 <!-- =========================================================
@@ -61,7 +64,7 @@
                                     <div class="d-flex align-items-end row">
                                         <div class="col-sm-7">
                                             <div class="card-body">
-                                                <h5 class="card-title text-primary">Congratulations John! 🎉</h5>
+                                                <h5 class="card-title text-primary">Congratulations Andrew! 🎉</h5>
                                                 <p class="mb-4">
                                                     You have done <span class="fw-bold">72%</span> more sales today. Check your new badge in
                                                     your profile.
@@ -123,7 +126,7 @@
                                                 <div class="card-title d-flex align-items-start justify-content-between">
                                                     <div class="avatar flex-shrink-0">
                                                         <img
-                                                            src="../assets/img/icons/unicons/wallet-info.png"
+                                                            src="../assets/img/1"
                                                             alt="Credit Card"
                                                             class="rounded" />
                                                     </div>
