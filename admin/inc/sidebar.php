@@ -306,25 +306,24 @@
             </ul>
         </li>
 
-        <li class="menu-item">
+        < class="menu-item">
             <a href="icons-boxicons.html" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-crown"></i>
                 <div data-i18n="Boxicons">Boxicons</div>
-            </a>
-        </li>
+            </a
 
         <!-- Forms & Tables -->
-        <li class="menu-header small text-uppercase"><span class="menu-header-text">Forms &amp; Tables</span></li>
+        <li class="menu-header small text-uppercase"><span class="menu-header-text">Pengaturan</span></li>
         <!-- Forms -->
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-detail"></i>
-                <div data-i18n="Form Elements">Form Elements</div>
+                <i class="menu-icon tf-icons bx bx-cog"></i>
+                <div data-i18n="Form Elements">Pengaturan</div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item">
-                    <a href="forms-basic-inputs.html" class="menu-link">
-                        <div data-i18n="Basic Inputs">Basic Inputs</div>
+                    <a href="pengaturan-website.php" class="menu-link">
+                        <div data-i18n="Basic Inputs">Pengaturan Website</div>
                     </a>
                 </li>
                 <li class="menu-item">

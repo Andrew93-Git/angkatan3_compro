@@ -3,41 +3,63 @@ session_start();
 include 'koneksi.php';
 
 // jika button simpan di tekan
+$queryPengaturan = mysqli_query($koneksi, "SELECT * FROM general_setting ORDER BY id DESC");
+$rowPengaturan = mysqli_fetch_assoc($queryPengaturan);
 if (isset($_POST['simpan'])) {
-    $nama = $_POST['nama'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $website_name = $_POST['website_name'];
+    $website_link = $_POST['website_link'];
+    $id           = $_POST['id'];
+    $website_phone = $_POST['website_phone'];
+    $website_email = $_POST['website_email'];
+    $website_address = $_POST['website_address'];
+
+
+    // mencari data di dalam table pengaturan,jika ada data akan ada di update,
+    //jika tidak ada maka akan di insert 
+
+    if (mysqli_num_rows($queryPengaturan) > 0) {
+        if (!empty($_FILES['foto']['name'])) {
+            $nama_foto = $_FILES['foto']['name'];
+            $ukuran_foto = $_FILES['foto']['size'];
+
+
+            // tipe extensi foto
+            $ext = array('png', 'jpeg', 'jpg');
+            $extFoto = pathinfo($nama_foto, PATHINFO_EXTENSION);
+
+            // JIKA EXTENSI FOTO TIDAK ADA YANG TERDAFTAR DI ARRAY EXTENSI
+            if (!in_array($extFoto, $ext)) {
+                echo "Ext tidak ditemukan";
+                die;
+            } else {
+                // PINDAKAN GAMBAR DARI TMP KE FOLDER YANG SUDAH KITA BUAT
+                move_uploaded_file($_FILES['foto']['tmp_name'], 'upload/' . $nama_foto);
+
+                $update = mysqli_query($koneksi, "UPDATE general_setting SET website_name='$website_name', website_link='$website_link', logo='$nama_foto',website_phone='$website_phone',website_email='$website_email',website_address='$website_address' WHERE  id ='$id'");
+            }
+        } else {
+            $update = mysqli_query($koneksi, "UPDATE general_setting SET website_name='$website_name',website_link='$website_link',website_phone='$website_phone',website_email='$website_email',website_address='$website_address' WHERE id='$id'");
+        }
+    } else {
+        if (!empty($_FILES['foto']['name'])) {
+            $nama_foto = $_FILES['foto']['name'];
+            $ukuran_foto = $_FILES['foto']['size'];
+        }
+    }
 
 
     // $_POST : form input name=''
     // $_GET : url ? parameter+'nilai'
     // $_FILES: mengambil nilai dari input type file
 
-    if (isset($_FILES['foto']['name'])) {
-        $nama_foto = $_FILES['foto']['name'];
-        $ukuran_foto = $_FILES['foto']['size'];
 
 
-        // tipe extensi foto
-        $ext = array('png', 'jpeg', 'jpg');
-        $extFoto = pathinfo($nama_foto, PATHINFO_EXTENSION);
 
-        // JIKA EXTENSI FOTO TIDAK ADA YANG TERDAFTAR DI ARRAY EXTENSI
-        if (!in_array($extFoto, $ext)) {
-            echo "Ext tidak ditemukan";
-            die;
-        } else {
-            // PINDAKAN GAMBAR DARI TMP KE FOLDER YANG SUDAH KITA BUAT
-            move_uploaded_file($_FILES['foto']['tmp_name'], 'upload/' . $nama_foto);
-            $insert = mysqli_query($koneksi, "INSERT INTO user (nama, email, password,foto) VALUES ('$nama','$email','$password','$nama_foto')");
-        }
-    } else {
-        $insert = mysqli_query($koneksi, "INSERT INTO user (nama, email, password) VALUES ('$nama','$email','$password')");
-    }
-
-
-    header("location:user.php?tambah=berhasil");
+    header("location:pengaturan-website.php?tambah=berhasil");
 }
+
+
+
 // query untuk mengedit
 $id = isset($_GET['edit']) ? $_GET['edit'] : '';
 $queryEdit = mysqli_query($koneksi, "SELECT * FROM user WHERE id ='$id'");
@@ -60,19 +82,6 @@ if (isset($_POST['edit'])) {
 }
 ?>
 <!DOCTYPE html>
-
-<!-- =========================================================
-* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
-==============================================================
-
-* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
-* Created by: ThemeSelection
-* License: You must have a valid license purchased in order to legally use the theme for your project.
-* Copyright ThemeSelection (https://themeselection.com)
-
-=========================================================
- -->
-<!-- beautify ignore:start -->
 <html
     lang="en"
     class="light-style layout-menu-fixed"
@@ -87,7 +96,7 @@ if (isset($_POST['edit'])) {
         name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Dashboard - Analytics | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+    <title>Dashboard</title>
 
     <meta name="description" content="" />
 
@@ -119,33 +128,58 @@ if (isset($_POST['edit'])) {
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="card">
-                                    <div class="card-header"><?php echo isset($_GET['edit']) ? 'Edit' : 'Tambah' ?> User</div>
+                                    <h3 class="card-header">Pengaturan Website</h3>
                                     <div class="card-body">
                                         <?php if (isset($_GET['hapus'])): ?>
                                             <div class="alert alert-info" role="alert">Data berhasil dihapus</div><?php endif ?>
                                         <form action="" method="post" enctype="multipart/form-data">
+                                            <input type="hidden"
+                                                class="form-control"
+                                                name="id"
+                                                value="<?php echo isset($rowPengaturan['id']) ? $rowPengaturan['id'] : '' ?>">
                                             <div class="mb-3 row">
                                                 <div class="col-sm-6">
-                                                    <label for="" class="form-label">Nama</label>
-                                                    <input type="text"
-                                                        class="form-control"
-                                                        name="nama"
-                                                        placeholder="Masukan nama anda" required value="<?php echo isset($_GET['edit']) ? $rowEdit['nama'] : '' ?>">
+                                                    <div class="mb-3">
+                                                        <label for="" class="form-label">Nama Website</label>
+                                                        <input type="text"
+                                                            class="form-control"
+                                                            name="website_name"
+                                                            placeholder="Masukan nama website" required value="<?php echo isset($rowPengaturan['website_name']) ? $rowPengaturan['website_name'] : '' ?>">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="" class="form-label">Telepon</label>
+                                                        <input type="text"
+                                                            class="form-control"
+                                                            name="website_phone"
+                                                            placeholder="Masukan telepon website" required value="<?php echo isset($rowPengaturan['website_phone']) ? $rowPengaturan['website_phone'] : '' ?>">
+                                                    </div>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label for="" class="form-label">Email</label>
-                                                    <input type="email"
-                                                        class="form-control"
-                                                        name="email"
-                                                        placeholder="Masukan email anda" required value="<?php echo isset($_GET['edit']) ? $rowEdit['email'] : '' ?>">
+                                                    <div class="mb-3">
+                                                        <label for="" class="form-label">Link Website</label>
+                                                        <input type="url"
+                                                            class="form-control"
+                                                            name="website_link"
+                                                            placeholder="Masukan link website anda" required value="<?php echo isset($rowPengaturan['website_link']) ? $rowPengaturan['website_link'] : '' ?>">
+
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="" class="form-label">Email Website</label>
+                                                        <input type="email"
+                                                            class="form-control"
+                                                            name="website_email"
+                                                            placeholder="Masukan email website anda" required value="<?php echo isset($rowPengaturan['website_email']) ? $rowPengaturan['website_email'] : '' ?>">
+
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
                                                 <div class="col-sm-12">
-                                                    <label for="" class="form-label">Password</label>
-                                                    <input type="password"
-                                                        name="password"
-                                                        placeholder="Masukan password anda" required value="<?php echo isset($_GET['edit']) ? $rowEdit['password'] : 'required' ?> " class="form-control" id="">
+                                                    <label for="" class="form-label">Alamat</label>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        name="website_address"
+                                                        placeholder="Masukan alamat anda" required value="<?php echo isset($_GET['website_address']) ? $rowEdit['website_address'] : '' ?> " class="form-control" id="" required>
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
@@ -156,7 +190,7 @@ if (isset($_POST['edit'])) {
                                                 </div>
                                             </div>
                                             <div class="mb-3">
-                                                <button class="btn btn-warning" name="<?php echo isset($_GET['edit']) ? 'edit' : 'simpan' ?>" type="submit">Simpan</button>
+                                                <button class="btn btn-primary" name="<?php echo isset($_GET['edit']) ? 'edit' : 'simpan' ?>" type="submit">Simpan</button>
                                             </div>
                                         </form>
                                     </div>

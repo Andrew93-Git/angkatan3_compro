@@ -1,5 +1,6 @@
 <?php
-session_start();
+include 'admin/koneksi.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
