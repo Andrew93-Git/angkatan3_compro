@@ -33,6 +33,8 @@ if (isset($_POST['simpan'])) {
                 die;
             } else {
                 // PINDAKAN GAMBAR DARI TMP KE FOLDER YANG SUDAH KITA BUAT
+                // UNLINK(): mendelete file
+                unlink('upload/' . $rowPengaturan['logo']);
                 move_uploaded_file($_FILES['foto']['tmp_name'], 'upload/' . $nama_foto);
 
                 $update = mysqli_query($koneksi, "UPDATE general_setting SET website_name='$website_name', website_link='$website_link', logo='$nama_foto',website_phone='$website_phone',website_email='$website_email',website_address='$website_address' WHERE  id ='$id'");
@@ -49,7 +51,7 @@ if (isset($_POST['simpan'])) {
 
 
     // $_POST : form input name=''
-    // $_GET : url ? parameter+'nilai'
+    // $_GET : url ? parameter'nilai'
     // $_FILES: mengambil nilai dari input type file
 
 
@@ -173,13 +175,13 @@ if (isset($_POST['edit'])) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mb-3 row">
+                                            <div class="mb-3">
                                                 <div class="col-sm-12">
                                                     <label for="" class="form-label">Alamat</label>
                                                     <input type="text"
                                                         class="form-control"
                                                         name="website_address"
-                                                        placeholder="Masukan alamat anda" required value="<?php echo isset($_GET['website_address']) ? $rowEdit['website_address'] : '' ?> " class="form-control" id="" required>
+                                                        placeholder="Masukan alamat anda" required value="<?php echo isset($_GET['website_address']) ? $rowEdit['website_address'] : '' ?> ">
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
@@ -187,6 +189,7 @@ if (isset($_POST['edit'])) {
                                                     <label for="" class="form-label">Foto</label>
                                                     <input type="file"
                                                         name="foto">
+                                                    <img width="100" src="upload/<?php echo isset($rowPengaturan['logo']) ? $rowPengaturan['logo'] : '' ?>" alt="">
                                                 </div>
                                             </div>
                                             <div class="mb-3">
